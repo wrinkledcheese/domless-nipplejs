@@ -1,3 +1,6 @@
+import Super from './super';
+import * as u from './utils';
+
 ///////////////////////
 ///   THE NIPPLE    ///
 ///////////////////////
@@ -55,7 +58,7 @@ function Nipple (collection, options) {
     };
 
     return this.instance;
-};
+}
 
 Nipple.prototype = new Super();
 Nipple.constructor = Nipple;
@@ -329,7 +332,8 @@ Nipple.prototype.computeDirection = function (obj) {
 
     if (obj.force > this.options.threshold) {
         var oldDirection = {};
-        for (var i in this.direction) {
+        var i;
+        for (i in this.direction) {
             if (this.direction.hasOwnProperty(i)) {
                 oldDirection[i] = this.direction[i];
             }
@@ -345,7 +349,7 @@ Nipple.prototype.computeDirection = function (obj) {
 
         obj.direction = this.direction;
 
-        for (var i in oldDirection) {
+        for (i in oldDirection) {
             if (oldDirection[i] === this.direction[i]) {
                 same[i] = true;
             }
@@ -374,3 +378,5 @@ Nipple.prototype.computeDirection = function (obj) {
     }
     return obj;
 };
+
+export default Nipple;

@@ -17,7 +17,6 @@ function Collection (manager, options) {
 
     // Defaults
     self.defaults = {
-        zzz
         multitouch: false,
         maxNumberOfNipples: 10,
         mode: 'dynamic',

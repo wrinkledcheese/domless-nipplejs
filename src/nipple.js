@@ -5,7 +5,7 @@
 function Nipple (collection, options) {
     this.identifier = options.identifier;
     this.position = options.position;
-    this.frontPosition = options.frontPosition;
+    this.frontPosition = dataoptions.frontPosition;
     this.collection = collection;
 
     // Defaults
@@ -14,7 +14,6 @@ function Nipple (collection, options) {
         threshold: 0.1,
         color: 'white',
         fadeTime: 250,
-        dataOnly: false,
         restJoystick: true,
         restOpacity: 0.5,
         mode: 'dynamic',
@@ -63,110 +62,6 @@ Nipple.prototype = new Super();
 Nipple.constructor = Nipple;
 Nipple.id = 0;
 
-// Build the dom element of the Nipple instance.
-Nipple.prototype.buildEl = function (options) {
-    this.ui = {};
-
-    if (this.options.dataOnly) {
-        return this;
-    }
-
-    this.ui.el = document.createElement('div');
-    this.ui.back = document.createElement('div');
-    this.ui.front = document.createElement('div');
-
-    this.ui.el.className = 'nipple collection_' + this.collection.id;
-    this.ui.back.className = 'back';
-    this.ui.front.className = 'front';
-
-    this.ui.el.setAttribute('id', 'nipple_' + this.collection.id +
-        '_' + this.id);
-
-    this.ui.el.appendChild(this.ui.back);
-    this.ui.el.appendChild(this.ui.front);
-
-    return this;
-};
-
-// Apply CSS to the Nipple instance.
-Nipple.prototype.stylize = function () {
-    if (this.options.dataOnly) {
-        return this;
-    }
-    var animTime = this.options.fadeTime + 'ms';
-    var borderStyle = u.getVendorStyle('borderRadius', '50%');
-    var transitStyle = u.getTransitionStyle('transition', 'opacity', animTime);
-    var styles = {};
-    styles.el = {
-        position: 'absolute',
-        opacity: this.options.restOpacity,
-        display: 'block',
-        'zIndex': 999
-    };
-
-    styles.back = {
-        position: 'absolute',
-        display: 'block',
-        width: this.options.size + 'px',
-        height: this.options.size + 'px',
-        marginLeft: -this.options.size / 2 + 'px',
-        marginTop: -this.options.size / 2 + 'px',
-        background: this.options.color,
-        'opacity': '.5'
-    };
-
-    styles.front = {
-        width: this.options.size / 2 + 'px',
-        height: this.options.size / 2 + 'px',
-        position: 'absolute',
-        display: 'block',
-        marginLeft: -this.options.size / 4 + 'px',
-        marginTop: -this.options.size / 4 + 'px',
-        background: this.options.color,
-        'opacity': '.5'
-    };
-
-    u.extend(styles.el, transitStyle);
-    u.extend(styles.back, borderStyle);
-    u.extend(styles.front, borderStyle);
-
-    this.applyStyles(styles);
-
-    return this;
-};
-
-Nipple.prototype.applyStyles = function (styles) {
-    // Apply styles
-    for (var i in this.ui) {
-        if (this.ui.hasOwnProperty(i)) {
-            for (var j in styles[i]) {
-                this.ui[i].style[j] = styles[i][j];
-            }
-        }
-    }
-
-    return this;
-};
-
-// Inject the Nipple instance into DOM.
-Nipple.prototype.addToDom = function () {
-    // We're not adding it if we're dataOnly or already in dom.
-    if (this.options.dataOnly || document.body.contains(this.ui.el)) {
-        return this;
-    }
-    this.options.zone.appendChild(this.ui.el);
-    return this;
-};
-
-// Remove the Nipple instance from DOM.
-Nipple.prototype.removeFromDom = function () {
-    if (this.options.dataOnly || !document.body.contains(this.ui.el)) {
-        return this;
-    }
-    this.options.zone.removeChild(this.ui.el);
-    return this;
-};
-
 // Entirely destroy this nipple
 Nipple.prototype.destroy = function () {
     clearTimeout(this.removeTimeout);
@@ -175,69 +70,6 @@ Nipple.prototype.destroy = function () {
     this.trigger('destroyed', this.instance);
     this.removeFromDom();
     this.off();
-};
-
-// Fade in the Nipple instance.
-Nipple.prototype.show = function (cb) {
-    var self = this;
-
-    if (self.options.dataOnly) {
-        return self;
-    }
-
-    clearTimeout(self.removeTimeout);
-    clearTimeout(self.showTimeout);
-    clearTimeout(self.restTimeout);
-
-    self.addToDom();
-
-    self.restCallback();
-
-    setTimeout(function () {
-        self.ui.el.style.opacity = 1;
-    }, 0);
-
-    self.showTimeout = setTimeout(function () {
-        self.trigger('shown', self.instance);
-        if (typeof cb === 'function') {
-            cb.call(this);
-        }
-    }, self.options.fadeTime);
-
-    return self;
-};
-
-// Fade out the Nipple instance.
-Nipple.prototype.hide = function (cb) {
-    var self = this;
-
-    if (self.options.dataOnly) {
-        return self;
-    }
-
-    self.ui.el.style.opacity = self.options.restOpacity;
-
-    clearTimeout(self.removeTimeout);
-    clearTimeout(self.showTimeout);
-    clearTimeout(self.restTimeout);
-
-    self.removeTimeout = setTimeout(
-        function () {
-            var display = self.options.mode === 'dynamic' ? 'none' : 'block';
-            self.ui.el.style.display = display;
-            if (typeof cb === 'function') {
-                cb.call(self);
-            }
-
-            self.trigger('hidden', self.instance);
-        },
-        self.options.fadeTime
-    );
-    if (self.options.restJoystick) {
-        self.restPosition();
-    }
-
-    return self;
 };
 
 Nipple.prototype.restPosition = function (cb) {

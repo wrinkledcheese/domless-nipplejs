@@ -17,7 +17,7 @@ function Collection (manager, options) {
 
     // Defaults
     self.defaults = {
-        zone: document.body,
+        zzz
         multitouch: false,
         maxNumberOfNipples: 10,
         mode: 'dynamic',
@@ -27,7 +27,7 @@ function Collection (manager, options) {
         threshold: 0.1,
         color: 'white',
         fadeTime: 250,
-        dataOnly: false,
+        
         restJoystick: true,
         restOpacity: 0.5,
         lockX: false,
@@ -156,7 +156,7 @@ Collection.prototype.createNipple = function (position, identifier) {
         size: opts.size,
         threshold: opts.threshold,
         fadeTime: opts.fadeTime,
-        dataOnly: opts.dataOnly,
+        
         restJoystick: opts.restJoystick,
         restOpacity: opts.restOpacity,
         mode: opts.mode,
@@ -169,10 +169,6 @@ Collection.prototype.createNipple = function (position, identifier) {
         }
     });
 
-    if (!opts.dataOnly) {
-        u.applyPosition(nipple.ui.el, toPutOn);
-        u.applyPosition(nipple.ui.front, nipple.frontPosition);
-    }
     self.nipples.push(nipple);
     self.trigger('added ' + nipple.identifier + ':added', nipple);
     self.manager.trigger('added ' + nipple.identifier + ':added', nipple);
@@ -384,10 +380,6 @@ Collection.prototype.processOnMove = function (evt) {
         y: yPosition
     };
 
-    if (!opts.dataOnly) {
-        u.applyPosition(nipple.ui.front, nipple.frontPosition);
-    }
-
     // Prepare event's datas.
     var toSend = {
         identifier: nipple.identifier,
@@ -427,18 +419,6 @@ Collection.prototype.processOnEnd = function (evt) {
 
     if (!nipple) {
         return;
-    }
-
-    if (!opts.dataOnly) {
-        nipple.hide(function () {
-            if (opts.mode === 'dynamic') {
-                nipple.trigger('removed', nipple);
-                self.trigger('removed ' + nipple.id + ':removed', nipple);
-                self.manager
-                    .trigger('removed ' + nipple.id + ':removed', nipple);
-                nipple.destroy();
-            }
-        });
     }
 
     // Clear the pressure interval reader

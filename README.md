@@ -1,6 +1,7 @@
 ![alt tag](./test/nipplejs.png)
-> A vanilla virtual joystick for touch capable interfaces
+> A vanilla, data-only, virtual joystick for touch capable interfaces
 
+Intended for use with React Native by a n00b.  Wish me luck.
 
 [![npm](https://img.shields.io/npm/v/nipplejs.svg)](https://npmjs.org/package/nipplejs)
 [![CDNJS](https://img.shields.io/cdnjs/v/nipplejs.svg)](https://cdnjs.com/libraries/nipplejs)
